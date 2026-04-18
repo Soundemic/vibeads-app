@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibeads | توليد فيديوهات خليجية</title>
+    <style>
+        body { background-color: #000; color: #D4AF37; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+        .container { background: #0C0C0C; padding: 40px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 10px 50px rgba(0,0,0,0.8); max-width: 500px; width: 90%; }
+        h1 { font-size: 3.5rem; margin: 0; background: linear-gradient(135deg, #F5D76E, #D4AF37, #9A7C10); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: #fff; letter-spacing: 2px; margin-bottom: 30px; }
+        input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #282828; background: #000; color: #fff; margin-bottom: 20px; box-sizing: border-box; outline: none; }
+        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: linear-gradient(135deg, #D4AF37, #9A7C10); color: #000; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
+        button:hover { transform: scale(1.02); opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VIBEADS</h1>
+        <p>محرك الذكاء الاصطناعي الخليجي</p>
+        <input type="text" id="videoLink" placeholder="ضع رابط المنتج أو الفيديو هنا...">
+        <button onclick="sendToN8N()">توليد الفيديو الآن</button>
+    </div>
+
+    <script>
+        async function sendToN8N() {
+            const link = document.getElementById('videoLink').value;
+            if(!link) return alert('يرجى وضع رابط أولاً');
+            
+            const btn = document.querySelector('button');
+            btn.innerText = 'جاري الإرسال لـ n8n...';
+            
+            try {
+                await fetch('https://ileopard77.app.n8n.cloud/webhook/vibeads-v5', {
+                    method: 'POST',
+                    body: JSON.stringify({ url: link }),
+                    headers: {'Content-Type': 'application/json'}
+                });
+                alert('تم الاستلام! بدأنا العمل على الفيديو الخاص بك.');
+            } catch (e) {
+                alert('حدث خطأ في الاتصال.');
+            } finally {
+                btn.innerText = 'توليد الفيديو الآن';
+            }
+        }
+    </script>
+</body>
+</html>
