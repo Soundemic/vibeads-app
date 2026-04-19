@@ -1,108 +1,123 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibeads | تحويل الروابط إلى فيديوهات إعلانية</title>
+    <title>Vibeads — AI Video Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #000; color: #fff; }
-        .gold-gradient { background: linear-gradient(90deg, #D4AF37 0%, #F9E27D 50%, #D4AF37 100%); }
-        .gold-border { border: 1px solid #D4AF37; }
+        body { background: #000; color: #F0EDE6; font-family: 'Inter', sans-serif; }
+        .gold-grad { background: linear-gradient(135deg, #F5D76E, #D4AF37, #9A7C10); }
         .gold-text { color: #D4AF37; }
-        .card-bg { background: #111; border: 1px solid #222; transition: 0.3s; }
-        .card-bg:hover { border-color: #D4AF37; transform: translateY(-5px); }
-        .avatar-selected { border: 3px solid #D4AF37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
+        .border-gold { border: 1px solid rgba(212, 175, 55, 0.3); }
+        .card-sh:hover { border-color: #D4AF37; transform: translateY(-5px); transition: 0.3s; }
+        .avatar-img { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; }
     </style>
 </head>
-<body class="bg-black">
+<body class="antialiased">
 
-    <nav class="p-6 border-b border-zinc-800 flex justify-between items-center">
-        <div class="text-3xl font-bold gold-text tracking-tighter">VIBEADS</div>
-        <div class="hidden md:flex gap-8 text-sm">
-            <a href="#" class="hover:text-[#D4AF37]">الرئيسية</a>
-            <a href="#" class="hover:text-[#D4AF37]">كيف يعمل؟</a>
-            <a href="#" class="hover:text-[#D4AF37]">الأسعار</a>
+    <nav class="p-6 border-b border-zinc-900 flex justify-between items-center bg-black/80 sticky top-0 z-50">
+        <div class="text-3xl font-black gold-text tracking-tighter">VIBEADS</div>
+        <div class="flex items-center gap-6">
+            <select id="langSel" class="bg-zinc-900 border border-zinc-700 text-sm p-2 rounded-lg outline-none">
+                <option value="en" selected>🇺🇸 English (Default)</option>
+                <optgroup label="Arabic Dialects">
+                    <option value="ar-sa">🇸🇦 Saudi Arabia</option>
+                    <option value="ar-kw">🇰🇼 Kuwaiti</option>
+                    <option value="ar-ae">🇦🇪 UAE</option>
+                </optgroup>
+                <optgroup label="Global">
+                    <option value="es">🇪🇸 Spanish</option>
+                    <option value="fr">🇫🇷 French</option>
+                    <option value="zh">🇨🇳 Chinese</option>
+                </optgroup>
+            </select>
+            <button class="gold-grad text-black px-5 py-2 rounded-full font-bold text-sm">Sign In</button>
         </div>
-        <button class="gold-gradient text-black px-6 py-2 rounded-full font-bold text-sm">ابدأ الآن</button>
     </nav>
 
-    <section class="max-w-6xl mx-auto px-6 py-16 text-center">
-        <h1 class="text-5xl md:text-7xl font-bold mb-6">اصنع إعلانك <span class="gold-text">بلمسة خليجية</span></h1>
-        <p class="text-zinc-400 text-xl mb-12 max-w-2xl mx-auto">حول أي رابط منتج إلى فيديو ترويجي احترافي باستخدام الذكاء الاصطناعي وشخصيات عربية واقعية.</p>
+    <header class="max-w-6xl mx-auto px-6 py-20 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Turn Links into <br><span class="gold-text">Premium Video Ads</span></h1>
+        <p class="text-zinc-500 text-xl mb-12 max-w-2xl mx-auto">AI-powered video generation with realistic human avatars. Professional, fast, and global.</p>
 
-        <div class="max-w-3xl mx-auto bg-[#111] p-2 rounded-2xl border border-zinc-800 flex flex-col md:flex-row gap-2">
-            <input id="videoUrl" type="url" placeholder="ضع رابط المنتج هنا (أمازون، سلة، زد...)" 
-                   class="flex-1 bg-transparent p-4 outline-none text-white text-right">
-            <button onclick="generateVideo()" class="gold-gradient text-black px-10 py-4 rounded-xl font-bold text-lg hover:opacity-90 transition">
-                توليد الفيديو
-            </button>
+        <div class="max-w-3xl mx-auto p-2 bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col md:flex-row gap-2">
+            <input id="prodUrl" type="url" placeholder="Paste Amazon, Salla, or Instagram link..." 
+                   class="flex-1 bg-transparent p-4 outline-none text-lg">
+            <button onclick="generateVideo()" class="gold-grad text-black px-10 py-4 rounded-xl font-bold text-lg hover:scale-105 transition">Generate</button>
         </div>
 
-        <div id="statusBox" class="hidden mt-8 max-w-xl mx-auto p-4 rounded-xl border border-dashed border-[#D4AF37] bg-zinc-900/50">
-            <div class="flex items-center justify-center gap-3">
-                <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-[#D4AF37]"></div>
-                <p id="statusText" class="gold-text font-medium">جاري تحليل الرابط...</p>
+        <div id="statusContainer" class="hidden mt-10 p-6 border-gold rounded-2xl bg-zinc-900/30 max-w-xl mx-auto">
+            <div id="loader" class="flex flex-col items-center gap-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-[#D4AF37]"></div>
+                <p class="gold-text font-medium animate-pulse">Vibeads Engine is processing your request...</p>
+            </div>
+            <div id="videoResult" class="hidden">
+                <h3 class="mb-4 font-bold">Your Video is Ready!</h3>
+                <video id="outputVid" controls class="w-full rounded-lg border border-zinc-700 shadow-2xl"></video>
+                <a id="dlBtn" href="#" download class="block mt-4 gold-text underline">Download MP4</a>
             </div>
         </div>
-    </section>
+    </header>
 
     <section class="max-w-6xl mx-auto px-6 py-12">
-        <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
-            <span class="w-8 h-[2px] gold-gradient"></span>
-            اختر الشخصية (الأفاتار)
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="card-bg rounded-2xl p-4 text-center cursor-pointer avatar-selected">
-                <div class="w-full h-48 bg-zinc-800 rounded-xl mb-4 overflow-hidden">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Faisal" alt="Faisal" class="w-full h-full object-cover">
-                </div>
-                <h3 class="font-bold">فيصل (خالجي)</h3>
-                <p class="text-xs text-zinc-500">صوت رسمي - هادئ</p>
+        <h2 class="text-2xl font-bold mb-10 border-l-4 border-gold pl-4 text-white">Select Your Global Avatar</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            <div class="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 card-sh cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1610088441520-4352457e7095?auto=format&fit=crop&q=80&w=400" class="avatar-img mb-4">
+                <h3 class="font-bold text-lg">Faisal</h3>
+                <p class="text-zinc-500 text-sm">Gulf Region · Professional</p>
             </div>
-            <div class="card-bg rounded-2xl p-4 text-center cursor-pointer">
-                <div class="w-full h-48 bg-zinc-800 rounded-xl mb-4 overflow-hidden">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Noura" alt="Noura" class="w-full h-full object-cover">
-                </div>
-                <h3 class="font-bold">نورة (نجدية)</h3>
-                <p class="text-xs text-zinc-500">صوت حيوي - تسويقي</p>
-            </div>
-            </div>
-    </section>
 
-    <footer class="border-t border-zinc-900 py-12 text-center text-zinc-500 text-sm">
-        <p>&copy; 2026 Vibeads. جميع الحقوق محفوظة.</p>
-    </footer>
+            <div class="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 card-sh cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400" class="avatar-img mb-4">
+                <h3 class="font-bold text-lg">Victoria</h3>
+                <p class="text-zinc-500 text-sm">Global · Business Executive</p>
+            </div>
+
+            <div class="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 card-sh cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=400" class="avatar-img mb-4">
+                <h3 class="font-bold text-lg">Noura</h3>
+                <p class="text-zinc-500 text-sm">Gulf Region · Influencer Style</p>
+            </div>
+
+            <div class="bg-zinc-900 p-4 rounded-3xl border border-zinc-800 card-sh cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&q=80&w=400" class="avatar-img mb-4">
+                <h3 class="font-bold text-lg">Mei</h3>
+                <p class="text-zinc-500 text-sm">Asian · Creative Artist</p>
+            </div>
+
+        </div>
+    </section>
 
     <script>
         async function generateVideo() {
-            const urlInput = document.getElementById('videoUrl').value;
-            const statusBox = document.getElementById('statusBox');
-            const statusText = document.getElementById('statusText');
+            const url = document.getElementById('prodUrl').value;
+            const lang = document.getElementById('langSel').value;
+            if(!url) return alert('Please enter a link');
 
-            if (!urlInput) {
-                alert('الرجاء وضع رابط أولاً');
-                return;
-            }
-
-            statusBox.classList.remove('hidden');
-            statusText.innerText = 'تم الاستلام! المصنع (n8n) بدأ العمل...';
+            document.getElementById('statusContainer').classList.remove('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('videoResult').classList.add('hidden');
 
             try {
                 const response = await fetch('https://ileopard77.app.n8n.cloud/webhook/vibeads-v5', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: urlInput })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ product_url: url, language: lang, avatar: 'faisal' })
                 });
 
-                if (response.ok) {
-                    statusText.innerText = 'جاري رندرة الفيديو.. قد يستغرق الأمر دقيقة';
-                } else {
-                    statusText.innerText = 'حدث خطأ في الاتصال بالمصنع';
+                const data = await response.json();
+                
+                if(data.video_url) {
+                    document.getElementById('loader').classList.add('hidden');
+                    document.getElementById('videoResult').classList.remove('hidden');
+                    document.getElementById('outputVid').src = data.video_url;
+                    document.getElementById('dlBtn').href = data.video_url;
                 }
-            } catch (error) {
-                statusText.innerText = 'خطأ: تأكد من تشغيل الـ Webhook في n8n';
+            } catch (e) {
+                alert('Connection to engine timed out. Video is rendering in background.');
             }
         }
     </script>
